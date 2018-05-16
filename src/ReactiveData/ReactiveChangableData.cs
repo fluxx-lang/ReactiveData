@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace ReactiveData {
     public abstract class ReactiveChangableData<TValue> : IReactive<TValue> {
-        public virtual event ReactiveDataChangedEventHandler ReactiveDataChanged;
+        public virtual event ReactiveDataChangedEventHandler DataChanged;
 
         public void NotifyChanged(State state)
         {
-            ReactiveDataChanged?.Invoke(state);
+            DataChanged?.Invoke(state);
         }
 
-        public bool HaveSubscribers => ReactiveDataChanged != null;
+        public bool HaveSubscribers => DataChanged != null;
 
         public abstract TValue CurrentValue { get; }
 

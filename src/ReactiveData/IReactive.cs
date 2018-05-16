@@ -2,7 +2,7 @@ namespace ReactiveData
 {
     public interface IReactive
 	{
-	    event ReactiveDataChangedEventHandler ReactiveDataChanged;
+	    event ReactiveDataChangedEventHandler DataChanged;
     }
 
     public interface IReactive<out T> : IReactive

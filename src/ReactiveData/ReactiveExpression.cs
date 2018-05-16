@@ -15,18 +15,18 @@ namespace ReactiveData
             _expressionFunction = expressionFunction;
         }
 
-        public override event ReactiveDataChangedEventHandler ReactiveDataChanged {
+        public override event ReactiveDataChangedEventHandler DataChanged {
             add {
                 // If we're moving from lazy to reactive mode, because someone is now listening for changes, then compute our value
                 // and update our dependencies, adding listeners for them
                 if (!HaveSubscribers)
                     RecomputeDerivedValue();
 
-                base.ReactiveDataChanged += value;
+                base.DataChanged += value;
             }
 
             remove {
-                base.ReactiveDataChanged -= value;
+                base.DataChanged -= value;
 
                 // If we're moving from reactive mode to lazy mode, then forget the value (so it can be garbage collected) and stop
                 // listening to our dependencies
@@ -34,7 +34,7 @@ namespace ReactiveData
                     _value = default(TValue);
 
                     foreach (IReactive dependency in _dependencies)
-                        dependency.ReactiveDataChanged -= OnDependencyChanged;
+                        dependency.DataChanged -= OnDependencyChanged;
                     _dependencies = new IReactive[0];
                 }
             }

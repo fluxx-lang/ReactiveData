@@ -10,7 +10,7 @@ namespace ReactiveData {
         /// <summary>
         /// Since data never changes for a ReactiveConstant, don't store any subscribers.
         /// </summary>
-        public event ReactiveDataChangedEventHandler ReactiveDataChanged {
+        public event ReactiveDataChangedEventHandler DataChanged {
             add { }
             remove { }
         }

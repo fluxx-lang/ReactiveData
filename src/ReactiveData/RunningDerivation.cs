@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -77,10 +77,10 @@ namespace ReactiveData {
 
             // TODO: Catch exceptions here to ensure in consistent state
             foreach (IReactive removeDependency in currDependenciesSet.Except(newDependenciesSet))
-                removeDependency.RemoveListener(onDataChanged);
+                removeDependency.DataChanged -= onDataChanged;
 
             foreach (IReactive addDependency in newDependenciesArray.Except(currDependenciesSet))
-                addDependency.AddListener(onDataChanged);
+                addDependency.DataChanged += onDataChanged;
 
             return newDependenciesArray;
         }
