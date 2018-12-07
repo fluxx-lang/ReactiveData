@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 
 namespace ReactiveData
 {
     public class ReactiveCode
     {
         private readonly Action _action;
-        private IReactive[] _dependencies = new IReactive[0];
-        private int _staleCount = 0;
+        private IReactiveData[] _dependencies = new IReactiveData[0];
 
 
         public ReactiveCode(Action action) {
@@ -14,16 +13,9 @@ namespace ReactiveData
             Run();
         }
 
-        private void OnDependencyChanged(State state)
+        private void OnDataChanged()
         {
-            if (state == State.Stale)
-                ++_staleCount;
-            else if (state == State.Ready)
-            {
-                --_staleCount;
-                if (_staleCount == 0)
-                    Run();
-            }
+            Run();
         }
 
         private void Run()
@@ -35,7 +27,7 @@ namespace ReactiveData
             _action.Invoke();
 
             if (runningDerivation.DependenciesChanged)
-                _dependencies = runningDerivation.UpdateDependencies(_dependencies, OnDependencyChanged);
+                _dependencies = runningDerivation.UpdateCodeDependencies(_dependencies, OnDataChanged);
 
             RunningDerivationsStack.Top = oldTopOfStack;
         }

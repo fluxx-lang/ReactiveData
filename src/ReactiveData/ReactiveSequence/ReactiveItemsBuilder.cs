@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -6,7 +6,7 @@ namespace ReactiveData.ReactiveSequence
 {
 	public class ReactiveItemsBuilder<TElement> : IEnumerable<TElement>
 	{
-		private readonly List<IReactive<IEnumerable<TElement>>> _subsequences = new List<IReactive<IEnumerable<TElement>>>();
+		private readonly List<IReactiveData<IEnumerable<TElement>>> _subsequences = new List<IReactiveData<IEnumerable<TElement>>>();
 		private readonly List<TElement> _currItems = new List<TElement>();
 
 
@@ -15,7 +15,7 @@ namespace ReactiveData.ReactiveSequence
 			_currItems.Add(item);
 		}
 
-		public void Add(IReactive<IEnumerable<TElement>> items)
+		public void Add(IReactiveData<IEnumerable<TElement>> items)
 		{
 			FinishCurrItemsSubsequence();
 			_subsequences.Add(items);
@@ -41,7 +41,7 @@ namespace ReactiveData.ReactiveSequence
 			throw new NotImplementedException();
 		}
 
-		internal List<IReactive<IEnumerable<TElement>>> GetSubsequences()
+		internal List<IReactiveData<IEnumerable<TElement>>> GetSubsequences()
 		{
 			FinishCurrItemsSubsequence();
 			return _subsequences;

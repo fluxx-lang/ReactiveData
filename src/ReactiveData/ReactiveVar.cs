@@ -1,38 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 
-namespace ReactiveData {
+namespace ReactiveData
+{
     /// <summary>
-    /// A ReactiveVar can be changed by calling set on the Value, in which case the change notification is sent,
-    /// or by mutating the Value's existing content and then calling NotifyChanged.
+    /// A ReactiveVar can be changed by calling Set. The wrapped object should generally be immutable,
+    /// not updated directly, though if it is updated directly it's fine to call Set again with the
+    /// same object to notify of the change.
     /// </summary>
     /// <typeparam name="TValue">type of the value to wrap</typeparam>
-    public sealed class ReactiveVar<TValue> : ReactiveChangableData<TValue> {
+    public sealed class ReactiveVar<TValue> : ReactiveChangeable<TValue> where TValue : IEquatable<TValue>
+    {
         private TValue _value;
 
-	    public ReactiveVar(TValue value)
-	    {
-	        _value = value;
-	    }
-
-        public void UpdateValue(TValue value)
+        public ReactiveVar(TValue value)
         {
-            NotifyChanged(State.Stale);
             _value = value;
-            NotifyChanged(State.Ready);
+        }
+
+        public void Set(TValue value)
+        {
+            // If not changing, don't notify
+            if (value.Equals(_value))
+                return;
+
+            _value = value;
+            NotifyExpressionsDependingOnMe();
+
+            NotifyChanged();
         }
 
         public override TValue Value {
             get {
-                RunningDerivation runningDerivation = RunningDerivationsStack.Top;
-                if (runningDerivation == null)
-                    throw new Exception("Can't get Value outside of a derivation; use CurrentVaue if don't want to register for changes");
-                runningDerivation.AddDependency(this);
-
+                RunningDerivationsStack.Top?.AddDependency(this);
                 return _value;
             }
         }
-
-        public override TValue CurrentValue => _value;
     }
 }

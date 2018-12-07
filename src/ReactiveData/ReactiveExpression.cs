@@ -2,20 +2,23 @@ using System;
 
 namespace ReactiveData
 {
-    public class ReactiveExpression<TValue> : ReactiveChangableData<TValue>
+    public interface IReactiveExpression
+    {
+        void OnDependencyChanged();
+    }
+
+    public class ReactiveExpression<TValue> : ReactiveChangeable<TValue>, IReactiveExpression where TValue : IEquatable<TValue>
     {
         private readonly Func<TValue> _expressionFunction;
         private TValue _value;
-        private IReactive[] _dependencies = new IReactive[0];
-        private int _staleCount = 0;
-
+        private IReactiveData[] _dependencies = new IReactiveData[0];
 
         public ReactiveExpression(Func<TValue> expressionFunction)
         {
             _expressionFunction = expressionFunction;
         }
 
-        public override event ReactiveDataChangedEventHandler DataChanged {
+        public override event DataChangedEventHandler DataChanged {
             add {
                 // If we're moving from lazy to reactive mode, because someone is now listening for changes, then compute our value
                 // and update our dependencies, adding listeners for them
@@ -33,9 +36,9 @@ namespace ReactiveData
                 if (!HaveSubscribers) {
                     _value = default(TValue);
 
-                    foreach (IReactive dependency in _dependencies)
-                        dependency.DataChanged -= OnDependencyChanged;
-                    _dependencies = new IReactive[0];
+                    foreach (IReactiveData dependency in _dependencies)
+                        dependency.RemoveExpressionDependingOnMe(this);
+                    _dependencies = new IReactiveData[0];
                 }
             }
         }
@@ -46,42 +49,28 @@ namespace ReactiveData
                 if (!HaveSubscribers)
                     return _expressionFunction.Invoke();
 
-                RunningDerivation runningDerivation = RunningDerivationsStack.Top;
-                if (runningDerivation == null)
-                    throw new Exception("Can't get Value outside of a derivation; use CurrentVaue if don't want to register for changes");
-                runningDerivation.AddDependency(this);
+                RunningDerivationsStack.Top?.AddDependency(this);
 
                 return _value;
             }
         }
 
-        public override TValue CurrentValue => !HaveSubscribers ? _expressionFunction.Invoke() : _value;
-
-        private void OnDependencyChanged(State state)
+        public void OnDependencyChanged()
         {
-            if (state == State.Stale) {
-                if (_staleCount == 0)
-                    NotifyChanged(State.Stale);
-                ++_staleCount;
-            } else if (state == State.Ready) {
-                --_staleCount;
-                if (_staleCount == 0) {
-                    RecomputeDerivedValue();
-                    NotifyChanged(State.Ready);
-                }
-            }
+            RecomputeDerivedValue();
+            NotifyChanged();
         }
 
         private void RecomputeDerivedValue()
         {
-            RunningDerivation runningDerivation = new RunningDerivation(_dependencies);
+            var runningDerivation = new RunningDerivation(_dependencies);
             RunningDerivation oldTopOfStack = RunningDerivationsStack.Top;
             RunningDerivationsStack.Top = runningDerivation;
 
             _value = _expressionFunction.Invoke();
 
             if (runningDerivation.DependenciesChanged)
-                _dependencies = runningDerivation.UpdateDependencies(_dependencies, OnDependencyChanged);
+                _dependencies = runningDerivation.UpdateExpressionDependencies(_dependencies, this);
 
             RunningDerivationsStack.Top = oldTopOfStack;
         }
