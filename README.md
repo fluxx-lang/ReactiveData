@@ -28,5 +28,5 @@ Here's an example, with a coded UI for Xamarin.Forms (using some Xamarin.Forms s
 ```
 
 The key thing here is that the `Settings.UseAlias ? User.Alias : $"{User.FirstName} {User.LastName}"`, which is set as the Label text,
-is reactive. If any component of that expression changes, it's automatically automatically re-evaluated and the label text updated.
-Normal XAML binding is restricted to single properties, but ReactiveData allows arbitrary expressions to be "bound".
+is reactive. If any component of that expression changes, it's automatically re-evaluated and the label text updated.
+Normally the XAML binding is restricted to single properties, but ReactiveData allows arbitrary expressions to be "bound".
