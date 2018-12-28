@@ -5,7 +5,7 @@ namespace ReactiveData
     public class ReactiveCode
     {
         private readonly Action _action;
-        private IReactiveData[] _dependencies = new IReactiveData[0];
+        private IReactive[] _dependencies = new IReactive[0];
 
 
         public ReactiveCode(Action action) {

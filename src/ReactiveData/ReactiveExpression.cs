@@ -7,11 +7,11 @@ namespace ReactiveData
         void OnDependencyChanged();
     }
 
-    public class ReactiveExpression<TValue> : ReactiveChangeable<TValue>, IReactiveExpression where TValue : IEquatable<TValue>
+    public class ReactiveExpression<TValue> : ReactiveMutable<TValue>, IReactiveExpression
     {
         private readonly Func<TValue> _expressionFunction;
         private TValue _value;
-        private IReactiveData[] _dependencies = new IReactiveData[0];
+        private IReactive[] _dependencies = new IReactive[0];
 
         public ReactiveExpression(Func<TValue> expressionFunction)
         {
@@ -36,9 +36,9 @@ namespace ReactiveData
                 if (!HaveSubscribers) {
                     _value = default(TValue);
 
-                    foreach (IReactiveData dependency in _dependencies)
+                    foreach (IReactive dependency in _dependencies)
                         dependency.RemoveExpressionDependingOnMe(this);
-                    _dependencies = new IReactiveData[0];
+                    _dependencies = new IReactive[0];
                 }
             }
         }

@@ -1,15 +1,14 @@
 namespace ReactiveData {
-    public class ReactiveConstant<TValue> : IReactiveData<TValue> {
+    public class ReactiveValue<TValue> : IReactive<TValue> {
         private readonly TValue _value;
 
-        public ReactiveConstant(TValue value) {
+        public ReactiveValue(TValue value) {
             _value = value;
         }
 
         /// <summary>
-        /// Since data never changes for a ReactiveConstant, don't store any subscribers.
+        /// Since data never changes for a ReactiveValue, don't store any subscribers.
         /// </summary>
-        
         public event DataChangedEventHandler DataChanged {
             add { }
             remove { }

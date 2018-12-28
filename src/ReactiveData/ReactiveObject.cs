@@ -2,7 +2,7 @@ using System;
 
 namespace ReactiveData
 {
-    public sealed class ReactiveObject<TValue> : ReactiveChangeable<TValue>, IDisposable where TValue : INotifyObjectChanged
+    public sealed class ReactiveObject<TValue> : ReactiveMutable<TValue>, IDisposable where TValue : INotifyObjectChanged
     {
         private readonly TValue _value;
 

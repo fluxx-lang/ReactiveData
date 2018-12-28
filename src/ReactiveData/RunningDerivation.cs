@@ -4,18 +4,18 @@ using System.Linq;
 
 namespace ReactiveData {
     internal class RunningDerivation {
-        private readonly IReactiveData[] _currentDependencies;
+        private readonly IReactive[] _currentDependencies;
         private int _nextDependencyIndex = 0;
-        private List<IReactiveData> _newDependencies = null;
+        private List<IReactive> _newDependencies = null;
 
 
-        public RunningDerivation(IReactiveData[] currentDependencies) {
+        public RunningDerivation(IReactive[] currentDependencies) {
             _currentDependencies = currentDependencies;
         }
 
-        public void AddDependency(IReactiveData reactiveData)
+        public void AddDependency(IReactive reactive)
         {
-            if (_nextDependencyIndex < _currentDependencies.Length && _currentDependencies[_nextDependencyIndex] == reactiveData)
+            if (_nextDependencyIndex < _currentDependencies.Length && _currentDependencies[_nextDependencyIndex] == reactive)
             {
                 ++_nextDependencyIndex;
                 return;
@@ -23,76 +23,76 @@ namespace ReactiveData {
 
             if (_newDependencies == null)
             {
-                _newDependencies = new List<IReactiveData>();
+                _newDependencies = new List<IReactive>();
                 for (int i = 0; i < _nextDependencyIndex; ++i)
                     _newDependencies.Add(_currentDependencies[i]);
 
                 _nextDependencyIndex = _currentDependencies.Length + 1;
             }
 
-            _newDependencies.Add(reactiveData);
+            _newDependencies.Add(reactive);
         }
 
         public bool DependenciesChanged => _nextDependencyIndex != _currentDependencies.Length;
 
-        internal IReactiveData[] UpdateExpressionDependencies(IReactiveData[] oldDependencies, IReactiveExpression reactiveExpression)
+        internal IReactive[] UpdateExpressionDependencies(IReactive[] oldDependencies, IReactiveExpression reactiveExpression)
         {
             if (_nextDependencyIndex < _currentDependencies.Length) 
             {
                 if (_newDependencies != null)
                     throw new Exception("_newDependencies unexpectedly initialized when _nextDependencyIndex is before the end");
 
-                _newDependencies = new List<IReactiveData>();
+                _newDependencies = new List<IReactive>();
                 for (int i = 0; i < _nextDependencyIndex; ++i)
                     _newDependencies.Add(_currentDependencies[i]);
             }
 
-            IReactiveData[] newDependenciesArray = _newDependencies.ToArray();
+            IReactive[] newDependenciesArray = _newDependencies.ToArray();
 
-            var currDependenciesSet = new HashSet<IReactiveData>();
-            foreach (IReactiveData currDependency in oldDependencies)
+            var currDependenciesSet = new HashSet<IReactive>();
+            foreach (IReactive currDependency in oldDependencies)
                 currDependenciesSet.Add(currDependency);
 
-            var newDependenciesSet = new HashSet<IReactiveData>();
-            foreach (IReactiveData newDependency in newDependenciesArray)
+            var newDependenciesSet = new HashSet<IReactive>();
+            foreach (IReactive newDependency in newDependenciesArray)
                 newDependenciesSet.Add(newDependency);
 
             // TODO: Catch exceptions here to ensure in consistent state
-            foreach (IReactiveData removeDependency in currDependenciesSet.Except(newDependenciesSet))
+            foreach (IReactive removeDependency in currDependenciesSet.Except(newDependenciesSet))
                 removeDependency.RemoveExpressionDependingOnMe(reactiveExpression);
 
-            foreach (IReactiveData addDependency in newDependenciesArray.Except(currDependenciesSet))
+            foreach (IReactive addDependency in newDependenciesArray.Except(currDependenciesSet))
                 addDependency.AddExpressionDependingOnMe(reactiveExpression);
 
             return newDependenciesArray;
         }
 
-        internal IReactiveData[] UpdateCodeDependencies(IReactiveData[] oldDependencies, DataChangedEventHandler dataChanged)
+        internal IReactive[] UpdateCodeDependencies(IReactive[] oldDependencies, DataChangedEventHandler dataChanged)
         {
             if (_nextDependencyIndex < _currentDependencies.Length) {
                 if (_newDependencies != null)
                     throw new Exception("_newDependencies unexpectedly initialized when _nextDependencyIndex is before the end");
 
-                _newDependencies = new List<IReactiveData>();
+                _newDependencies = new List<IReactive>();
                 for (int i = 0; i < _nextDependencyIndex; ++i)
                     _newDependencies.Add(_currentDependencies[i]);
             }
 
-            IReactiveData[] newDependenciesArray = _newDependencies.ToArray();
+            IReactive[] newDependenciesArray = _newDependencies.ToArray();
 
-            var currDependenciesSet = new HashSet<IReactiveData>();
-            foreach (IReactiveData currDependency in oldDependencies)
+            var currDependenciesSet = new HashSet<IReactive>();
+            foreach (IReactive currDependency in oldDependencies)
                 currDependenciesSet.Add(currDependency);
 
-            var newDependenciesSet = new HashSet<IReactiveData>();
-            foreach (IReactiveData newDependency in newDependenciesArray)
+            var newDependenciesSet = new HashSet<IReactive>();
+            foreach (IReactive newDependency in newDependenciesArray)
                 newDependenciesSet.Add(newDependency);
 
             // TODO: Catch exceptions here to ensure in consistent state
-            foreach (IReactiveData removeDependency in currDependenciesSet.Except(newDependenciesSet))
+            foreach (IReactive removeDependency in currDependenciesSet.Except(newDependenciesSet))
                 removeDependency.DataChanged -= dataChanged;
 
-            foreach (IReactiveData addDependency in newDependenciesArray.Except(currDependenciesSet))
+            foreach (IReactive addDependency in newDependenciesArray.Except(currDependenciesSet))
                 addDependency.DataChanged += dataChanged;
 
             return newDependenciesArray;

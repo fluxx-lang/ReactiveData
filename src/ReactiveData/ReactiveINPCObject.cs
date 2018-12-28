@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace ReactiveData
 {
-    public sealed class ReactiveINPCObject<TValue> : ReactiveChangeable<TValue>, IDisposable where TValue : INotifyPropertyChanged
+    public sealed class ReactiveINPCObject<TValue> : ReactiveMutable<TValue>, IDisposable where TValue : INotifyPropertyChanged
     {
         private readonly TValue _value;
 

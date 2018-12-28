@@ -1,9 +1,6 @@
 namespace ReactiveData
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public interface IReactiveData
+    public interface IReactive
     {
         event DataChangedEventHandler DataChanged;
 
@@ -12,7 +9,7 @@ namespace ReactiveData
         void RemoveExpressionDependingOnMe(IReactiveExpression reactiveExpression);
     }
 
-    public interface IReactiveData<out T> : IReactiveData
+    public interface IReactive<out T> : IReactive
     {
         T Value { get; }
     }
