@@ -15,7 +15,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+
+# Use NuGet version >= 4.9.1 so that the nuget pack command works properly
 - task: NuGetToolInstaller@0
+  inputs:
+    versionSpec: '4.9.2'
 
 - task: NuGetCommand@2
   inputs:
