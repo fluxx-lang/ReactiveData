@@ -19,13 +19,7 @@ namespace ReactiveData
 
         public void Set(TValue value)
         {
-            // If not changing, don't notify
-            if (value.Equals(_value))
-                return;
-
             _value = value;
-            NotifyExpressionsDependingOnMe();
-
             NotifyChanged();
         }
 

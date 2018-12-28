@@ -9,19 +9,17 @@ namespace ReactiveData {
 
         public void NotifyChanged()
         {
-            Transaction currentTransaction = RunningTransaction.Current;
-            if (currentTransaction != null)
-                currentTransaction.AddToNotify(DataChanged);
-            else DataChanged?.Invoke();
-        }
-
-        public void NotifyExpressionsDependingOnMe()
-        {
+            // Immediately notify any expressions depending on me, traversing the graph upwards
             if (_expressionsDependingOnMe != null) {
                 var count = _expressionsDependingOnMe.Count;
                 for (int i = 0; i < count; i++)
                     _expressionsDependingOnMe[i].OnDependencyChanged();
             }
+
+            // If anyone external wants to be notified of changes, record that and the notification happens
+            // when the transaction completes
+            if (DataChanged != null)
+                Transaction.AddToNotify(DataChanged);
         }
 
         protected bool HaveSubscribers => DataChanged != null || _expressionsDependingOnMe?.Count > 0;

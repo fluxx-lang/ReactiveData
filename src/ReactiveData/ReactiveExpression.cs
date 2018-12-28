@@ -57,7 +57,14 @@ namespace ReactiveData
 
         public void OnDependencyChanged()
         {
+            TValue oldValue = _value;
+
             RecomputeDerivedValue();
+
+            // If not changing, don't notify
+            if (_value.Equals(oldValue))
+                return;
+
             NotifyChanged();
         }
 
