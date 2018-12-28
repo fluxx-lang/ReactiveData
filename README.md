@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/reactive-data/ReactiveData/_apis/build/status/reactive-data.ReactiveData?branchName=master)](https://dev.azure.com/reactive-data/ReactiveData/_build/latest?definitionId=1?branchName=master)
+
 # ReactiveData
 
 [MobX](https://github.com/mobxjs/mobx) style reactive state management for .NET
