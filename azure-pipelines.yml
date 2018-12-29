@@ -3,6 +3,9 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
+# This is the build name, which shows in Azure DevOps and is stamped into the built assemblies
+name: '${versionBase}-$(Rev:r)'
+
 trigger:
 - master
 
@@ -13,6 +16,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  versionBase: 0.1.0
 
 steps:
 
@@ -36,7 +40,21 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+# Build two packages, the first with a production version number, published to nuget.org when releasing
 - task: NuGetCommand@2
   inputs:
     command: pack
     packagesToPack: 'src/ReactiveData/ReactiveData.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: EXPLICIT_VERSION
+  env:
+    EXPLICIT_VERSION: '${versionBase}'
+
+# Build two packages, the second with a beta prefixed prerelease version number, always published to the internal feed and optionally published to nuget.org
+- task: NuGetCommand@2
+  inputs:
+    command: pack
+    packagesToPack: 'src/ReactiveData/ReactiveData.csproj'
+    versionEnvVar:
+  env:
+    EXPLICIT_VERSION: '${versionBase}-$(Rev:r)'
