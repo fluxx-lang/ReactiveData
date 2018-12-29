@@ -40,3 +40,7 @@ steps:
   inputs:
     command: pack
     packagesToPack: 'src/ReactiveData/ReactiveData.csproj'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: $(Build.ArtifactStagingDirectory)
