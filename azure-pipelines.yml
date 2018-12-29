@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
 # This is the build name, which shows in Azure DevOps and is stamped into the built assemblies
-name: '$(buildVersion)'
+name: '$(versionBase).$(buildNumber)'
 
 trigger:
 - master
@@ -17,9 +17,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   versionBase: '0.1.0'
-  buildVersion: '$(versionBase)-$(Rev:r)'
-  prereleaseVersion: '$(versionBase)-beta$(Rev:r)'
-  releaseVersion: '$(versionBase)'
+  buildNumber: $[counter('buildNumberCounter', 1)]
 
 steps:
 
@@ -56,7 +54,7 @@ steps:
     versioningScheme: byEnvVar
     versionEnvVar: 'PACK_VERSION'
   env:
-    PACK_VERSION: '$(releaseVersion)'
+    PACK_VERSION: '$(versionBase)'
 
 # Build two packages, the second with a beta prefixed prerelease version number, always published to the CI feed and optionally published to nuget.org
 - task: NuGetCommand@2
@@ -67,7 +65,7 @@ steps:
     versioningScheme: byEnvVar
     versionEnvVar: 'PACK_VERSION'
   env:
-    PACK_VERSION: '$(prereleaseVersion)'
+    PACK_VERSION: '$(versionBase)-beta$(buildNumber)'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish build artifacts'
