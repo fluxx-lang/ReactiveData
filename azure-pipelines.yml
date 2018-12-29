@@ -22,26 +22,31 @@ steps:
 
 # Use NuGet version >= 4.9.1 so that the nuget pack command works properly
 - task: NuGetToolInstaller@0
+  displayName: 'Install NuGet v4.9.2'
   inputs:
     versionSpec: '4.9.2'
 
 - task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
   inputs:
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
+  displayName: 'Build'
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 - task: VSTest@2
+  displayName: 'Test (currently empty)'
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 # Build two packages, the first with a production version number, published to nuget.org when releasing
 - task: NuGetCommand@2
+  displayName: 'Create release NuGet package'
   inputs:
     command: pack
     packagesToPack: 'src/ReactiveData/ReactiveData.csproj'
@@ -52,13 +57,16 @@ steps:
 
 # Build two packages, the second with a beta prefixed prerelease version number, always published to the CI feed and optionally published to nuget.org
 - task: NuGetCommand@2
+  displayName: 'Create prerelease NuGet package'
   inputs:
     command: pack
     packagesToPack: 'src/ReactiveData/ReactiveData.csproj'
+    versioningScheme: byEnvVar
     versionEnvVar: 'PACK_VERSION'
   env:
     PACK_VERSION: '$(versionBase)-beta$(Rev:r)'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish build artifacts'
   inputs:
     pathtoPublish: $(Build.ArtifactStagingDirectory)
