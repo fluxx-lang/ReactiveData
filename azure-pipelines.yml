@@ -46,15 +46,19 @@ steps:
     command: pack
     packagesToPack: 'src/ReactiveData/ReactiveData.csproj'
     versioningScheme: byEnvVar
-    versionEnvVar: EXPLICIT_VERSION
+    versionEnvVar: 'PACK_VERSION'
   env:
-    EXPLICIT_VERSION: '${versionBase}'
+    PACK_VERSION: '${versionBase}'
 
-# Build two packages, the second with a beta prefixed prerelease version number, always published to the internal feed and optionally published to nuget.org
+# Build two packages, the second with a beta prefixed prerelease version number, always published to the CI feed and optionally published to nuget.org
 - task: NuGetCommand@2
   inputs:
     command: pack
     packagesToPack: 'src/ReactiveData/ReactiveData.csproj'
-    versionEnvVar:
+    versionEnvVar: 'PACK_VERSION'
   env:
-    EXPLICIT_VERSION: '${versionBase}-$(Rev:r)'
+    PACK_VERSION: '${versionBase}-beta$(Rev:r)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: $(Build.ArtifactStagingDirectory)
