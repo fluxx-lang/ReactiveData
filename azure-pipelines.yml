@@ -57,7 +57,8 @@ steps:
   env:
     PACK_VERSION: '$(versionBase)'
 
-# Build two packages, the second with a prerelease version number suffix, always published to the CI feed and optionally published to nuget.org
+# Build two packages, the second with a prerelease version number suffix, always published to the CI feed and
+# optionally published to nuget.org for public beta releases
 - task: NuGetCommand@2
   displayName: 'Create prerelease NuGet package'
   inputs:
