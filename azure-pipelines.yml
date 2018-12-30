@@ -16,8 +16,10 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  versionBase: '0.1.0'
   buildNumber: $[counter('buildNumberCounter', 1)]
+  versionBase: '0.1.0'
+  releaseVersion: $(versionBase)
+  prereleaseVersion: $(versionBase)-beta$(buildNumber)
 
 steps:
 
@@ -56,7 +58,7 @@ steps:
     packDestination: '$(Build.ArtifactStagingDirectory)/release'
     includeSymbols: true
   env:
-    PACK_VERSION: '$(versionBase)'
+    PACK_VERSION: '$(releaseVersion)'
 
 # Build two packages, the second with a prerelease version number suffix, always published to the CI feed and
 # optionally published to nuget.org for public beta releases
@@ -70,7 +72,7 @@ steps:
     packDestination: '$(Build.ArtifactStagingDirectory)/prerelease'
     includeSymbols: true
   env:
-    PACK_VERSION: '$(versionBase)-beta$(buildNumber)'
+    PACK_VERSION: '$(prereleaseVersion)'
 
 # Publish to our CI NuGet feed (Azure Artifacts)
 - task: NuGetCommand@2
@@ -78,7 +80,7 @@ steps:
   inputs:
     command: push
     publishVstsFeed: 'ci-feed'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/prerelease/*.nupkg'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/prerelease/ReactiveData.$(prereleaseVersion).nupkg'
     allowPackageConflicts: false
 
 - task: PublishBuildArtifacts@1
