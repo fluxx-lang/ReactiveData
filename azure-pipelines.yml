@@ -54,6 +54,7 @@ steps:
     versioningScheme: byEnvVar
     versionEnvVar: 'PACK_VERSION'
     packDestination: '$(Build.ArtifactStagingDirectory)/release'
+    includeSymbols: true
   env:
     PACK_VERSION: '$(versionBase)'
 
@@ -67,6 +68,7 @@ steps:
     versioningScheme: byEnvVar
     versionEnvVar: 'PACK_VERSION'
     packDestination: '$(Build.ArtifactStagingDirectory)/prerelease'
+    includeSymbols: true
   env:
     PACK_VERSION: '$(versionBase)-beta$(buildNumber)'
 
