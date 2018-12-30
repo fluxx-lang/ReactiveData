@@ -70,6 +70,15 @@ steps:
   env:
     PACK_VERSION: '$(versionBase)-beta$(buildNumber)'
 
+# Publish to our CI NuGet feed (Azure Artifacts)
+- task: NuGetCommand@2
+  displayName: 'Publish prerelease NuGet to CI feed'
+  inputs:
+    command: push
+    publishVstsFeed: 'ci-feed'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/prerelease/*.nupkg'
+    allowPackageConflicts: false
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish build artifacts'
   inputs:
