@@ -42,7 +42,7 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: VSTest@2
-  displayName: 'Test (currently empty)'
+  displayName: 'Run tests'
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
