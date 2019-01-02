@@ -2,7 +2,7 @@ namespace ReactiveData
 {
     public interface IReactive
     {
-        event DataChangedEventHandler DataChanged;
+        event ChangedEventHandler Changed;
 
         void AddExpressionDependingOnMe(IReactiveExpression reactiveExpression);
 
@@ -14,5 +14,5 @@ namespace ReactiveData
         T Value { get; }
     }
 
-    public delegate void DataChangedEventHandler();
+    public delegate void ChangedEventHandler();
 }

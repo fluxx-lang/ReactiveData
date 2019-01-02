@@ -1,15 +1,18 @@
-namespace ReactiveData {
-    public class ReactiveValue<TValue> : IReactive<TValue> {
-        private readonly TValue _value;
+namespace ReactiveData
+{
+    public class ReactiveImmutable<T> : IReactive<T>
+    {
+        private readonly T _value;
 
-        public ReactiveValue(TValue value) {
+        public ReactiveImmutable(T value)
+        {
             _value = value;
         }
 
         /// <summary>
-        /// Since data never changes for a ReactiveValue, don't store any subscribers.
+        /// Since data never changes for a ReactiveImmutable, don't store any subscribers.
         /// </summary>
-        public event DataChangedEventHandler DataChanged {
+        public event ChangedEventHandler Changed {
             add { }
             remove { }
         }
@@ -22,6 +25,6 @@ namespace ReactiveData {
         {
         }
 
-        public TValue Value => _value;
+        public T Value => _value;
     }
 }

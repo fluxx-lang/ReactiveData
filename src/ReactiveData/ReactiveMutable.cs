@@ -5,10 +5,12 @@ namespace ReactiveData {
     {
         private List<IReactiveExpression> _expressionsDependingOnMe;
 
-        public virtual event DataChangedEventHandler DataChanged;
+        public virtual event ChangedEventHandler Changed;
 
         public void NotifyChanged()
         {
+            Transaction.EnsureInTransaction();
+
             // Immediately notify any expressions depending on me, traversing the graph upwards
             if (_expressionsDependingOnMe != null) {
                 var count = _expressionsDependingOnMe.Count;
@@ -18,11 +20,11 @@ namespace ReactiveData {
 
             // If anyone external wants to be notified of changes, record that and the notification happens
             // when the transaction completes
-            if (DataChanged != null)
-                Transaction.AddToNotify(DataChanged);
+            if (Changed != null)
+                Transaction.AddToNotify(Changed);
         }
 
-        protected bool HaveSubscribers => DataChanged != null || _expressionsDependingOnMe?.Count > 0;
+        protected bool HaveSubscribers => Changed != null || _expressionsDependingOnMe?.Count > 0;
 
         public void AddExpressionDependingOnMe(IReactiveExpression reactiveExpression)
         {

@@ -67,7 +67,7 @@ namespace ReactiveData {
             return newDependenciesArray;
         }
 
-        internal IReactive[] UpdateCodeDependencies(IReactive[] oldDependencies, DataChangedEventHandler dataChanged)
+        internal IReactive[] UpdateReactionDependencies(IReactive[] oldDependencies, ChangedEventHandler dataChanged)
         {
             if (_nextDependencyIndex < _currentDependencies.Length) {
                 if (_newDependencies != null)
@@ -90,10 +90,10 @@ namespace ReactiveData {
 
             // TODO: Catch exceptions here to ensure in consistent state
             foreach (IReactive removeDependency in currDependenciesSet.Except(newDependenciesSet))
-                removeDependency.DataChanged -= dataChanged;
+                removeDependency.Changed -= dataChanged;
 
             foreach (IReactive addDependency in newDependenciesArray.Except(currDependenciesSet))
-                addDependency.DataChanged += dataChanged;
+                addDependency.Changed += dataChanged;
 
             return newDependenciesArray;
         }

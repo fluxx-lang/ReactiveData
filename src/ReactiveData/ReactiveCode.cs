@@ -13,21 +13,16 @@ namespace ReactiveData
             Run();
         }
 
-        private void OnDataChanged()
-        {
-            Run();
-        }
-
         private void Run()
         {
-            RunningDerivation runningDerivation = new RunningDerivation(_dependencies);
+            var runningDerivation = new RunningDerivation(_dependencies);
             RunningDerivation oldTopOfStack = RunningDerivationsStack.Top;
             RunningDerivationsStack.Top = runningDerivation;
 
             _action.Invoke();
 
             if (runningDerivation.DependenciesChanged)
-                _dependencies = runningDerivation.UpdateCodeDependencies(_dependencies, OnDataChanged);
+                _dependencies = runningDerivation.UpdateReactionDependencies(_dependencies, Run);
 
             RunningDerivationsStack.Top = oldTopOfStack;
         }

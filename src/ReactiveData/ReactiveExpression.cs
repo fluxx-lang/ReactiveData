@@ -18,18 +18,18 @@ namespace ReactiveData
             _expressionFunction = expressionFunction;
         }
 
-        public override event DataChangedEventHandler DataChanged {
+        public override event ChangedEventHandler Changed {
             add {
                 // If we're moving from lazy to reactive mode, because someone is now listening for changes, then compute our value
                 // and update our dependencies, adding listeners for them
                 if (!HaveSubscribers)
                     RecomputeDerivedValue();
 
-                base.DataChanged += value;
+                base.Changed += value;
             }
 
             remove {
-                base.DataChanged -= value;
+                base.Changed -= value;
 
                 // If we're moving from reactive mode to lazy mode, then forget the value (so it can be garbage collected) and stop
                 // listening to our dependencies
