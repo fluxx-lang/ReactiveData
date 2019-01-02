@@ -2,15 +2,15 @@ namespace ReactiveData.Sequence
 {
     public class ItemsSequence<T> : IItemsSequence<T>
     {
-        private readonly T[] _items;
+        private readonly SequenceImmutableArray<T> _items;
 
-        public ItemsSequence(T[] items)
+        public ItemsSequence(SequenceImmutableArray<T> items)
         {
             _items = items;
         }
 
-        public T[] Items => _items;
+        public SequenceImmutableArray<T> Items => _items;
 
-        public int ItemCount => _items.Length;
+        public int ItemCount => _items.Count;
     }
 }
