@@ -5,23 +5,36 @@ namespace ReactiveData
 {
     public static class Transaction
     {
-        [ThreadStatic] private static HashSet<DataChangedEventHandler> _toNotify;
+        [ThreadStatic] private static HashSet<ChangedEventHandler> _reactionsToNotify;
 
         public static void Start()
         {
-            _toNotify = new HashSet<DataChangedEventHandler>();
+            _reactionsToNotify = new HashSet<ChangedEventHandler>();
         }
 
-        public static void AddToNotify(DataChangedEventHandler dataChanged)
+        public static void AddToNotify(ChangedEventHandler changedEventHandler)
         {
-            _toNotify.Add(dataChanged);
+            _reactionsToNotify.Add(changedEventHandler);
         }
 
         public static void Complete()
         {
-            foreach (DataChangedEventHandler dataChanged in _toNotify)
-                dataChanged.Invoke();
-            _toNotify = null;
+            foreach (ChangedEventHandler changedEventHandler in _reactionsToNotify)
+                changedEventHandler.Invoke();
+            _reactionsToNotify = null;
+        }
+
+        public static void Run(Action action)
+        {
+            Start();
+            action.Invoke();
+            Complete();
+        }
+
+        public static void EnsureInTransaction()
+        {
+            if (_reactionsToNotify == null)
+                throw new InvalidOperationException("Reactive data can only be modified inside a transaction. Use Transaction.Start / Transaction.Complete around updates.");
         }
     }
 }
