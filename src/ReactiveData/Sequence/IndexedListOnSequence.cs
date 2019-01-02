@@ -1,5 +1,5 @@
 using System;
-using ReactiveData.ReactiveSequences;
+using ReactiveData.Sequence.IndexedList;
 
 namespace ReactiveData.Sequence
 {
@@ -75,15 +75,15 @@ namespace ReactiveData.Sequence
 
                 if (sequence is ParentSequence<T> parentSequence)
                 {
-                    ISequence<T>[] childSequences = parentSequence.Children;
+                    SequenceImmutableArray<ISequence<T>> childSequences = parentSequence.Children;
 
                     // Remove the old items, if there are any
                     if (_currDescendentItemCount > 0) {
-                        indexedList.Replace(currStartIndex, _currDescendentItemCount, null);
+                        indexedList.Update(currStartIndex, _currDescendentItemCount, null);
                         _currDescendentItemCount = 0;
                     }
 
-                    int childSequencesLength = childSequences.Length;
+                    int childSequencesLength = childSequences.Count;
                     _childNodes = new Node[childSequencesLength];
                     for (int i = 0; i < childSequencesLength; i++)
                     {
@@ -97,7 +97,7 @@ namespace ReactiveData.Sequence
                 }
                 else if (sequence is IItemsSequence<T> itemsSequence)
                 {
-                    indexedList.Replace(currStartIndex, _currDescendentItemCount, itemsSequence.Items);
+                    indexedList.Update(currStartIndex, _currDescendentItemCount, itemsSequence.Items.GetArray());
 
                     _childNodes = null;
                     _currDescendentItemCount = itemsSequence.ItemCount;
@@ -120,7 +120,7 @@ namespace ReactiveData.Sequence
         private class ReactiveNode : Node
         {
             private readonly IndexedListOnSequence<T> _indexedListOnSequence;
-            private IReactiveSequence<T> _reactiveSequence;
+            private readonly IReactiveSequence<T> _reactiveSequence;
 
             public ReactiveNode(IndexedListOnSequence<T> indexedListOnSequence, IReactiveSequence<T> reactiveSequence, int currStartIndex)
             {
@@ -128,7 +128,7 @@ namespace ReactiveData.Sequence
                 _reactiveSequence = reactiveSequence;
 
                 UpdateFromSequence(indexedListOnSequence, reactiveSequence.Value, currStartIndex);
-                reactiveSequence.DataChanged += OnSequenceChanged;
+                reactiveSequence.Changed += OnSequenceChanged;
             }
 
             private void OnSequenceChanged()
