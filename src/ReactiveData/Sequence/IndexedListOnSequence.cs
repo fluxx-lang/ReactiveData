@@ -51,7 +51,7 @@ namespace ReactiveData.Sequence
 
         private class Node
         {
-            private Node[] _childNodes;
+            private Node[] _childNodes = null;
             private int _currDescendentItemCount;
 
             internal static Node CreateNode(IndexedListOnSequence<T> indexedListOnSequence,

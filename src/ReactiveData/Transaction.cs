@@ -5,7 +5,7 @@ namespace ReactiveData
 {
     public static class Transaction
     {
-        [ThreadStatic] private static HashSet<ChangedEventHandler> _reactionsToNotify;
+        [ThreadStatic] private static HashSet<ChangedEventHandler>? _reactionsToNotify;
 
         public static void Start()
         {
@@ -14,12 +14,12 @@ namespace ReactiveData
 
         public static void AddToNotify(ChangedEventHandler changedEventHandler)
         {
-            _reactionsToNotify.Add(changedEventHandler);
+            _reactionsToNotify!.Add(changedEventHandler);
         }
 
         public static void Complete()
         {
-            foreach (ChangedEventHandler changedEventHandler in _reactionsToNotify)
+            foreach (ChangedEventHandler changedEventHandler in _reactionsToNotify!)
                 changedEventHandler.Invoke();
             _reactionsToNotify = null;
         }

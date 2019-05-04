@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace ReactiveData {
     public abstract class ReactiveMutable<TValue> : IReactive<TValue>
     {
-        private List<IReactiveExpression> _expressionsDependingOnMe;
+        private List<IReactiveExpression>? _expressionsDependingOnMe;
 
         public virtual event ChangedEventHandler Changed;
 

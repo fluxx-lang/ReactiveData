@@ -6,7 +6,7 @@ namespace ReactiveData {
     internal class RunningDerivation {
         private readonly IReactive[] _currentDependencies;
         private int _nextDependencyIndex = 0;
-        private List<IReactive> _newDependencies = null;
+        private List<IReactive>? _newDependencies = null;
 
 
         public RunningDerivation(IReactive[] currentDependencies) {
@@ -47,7 +47,7 @@ namespace ReactiveData {
                     _newDependencies.Add(_currentDependencies[i]);
             }
 
-            IReactive[] newDependenciesArray = _newDependencies.ToArray();
+            IReactive[] newDependenciesArray = _newDependencies!.ToArray();
 
             var currDependenciesSet = new HashSet<IReactive>();
             foreach (IReactive currDependency in oldDependencies)
@@ -78,7 +78,7 @@ namespace ReactiveData {
                     _newDependencies.Add(_currentDependencies[i]);
             }
 
-            IReactive[] newDependenciesArray = _newDependencies.ToArray();
+            IReactive[] newDependenciesArray = _newDependencies!.ToArray();
 
             var currDependenciesSet = new HashSet<IReactive>();
             foreach (IReactive currDependency in oldDependencies)
