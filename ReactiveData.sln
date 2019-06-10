@@ -8,11 +8,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B973B216-848B-435E-AC69-567D364543D3}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveData.Tests", "test\ReactiveData.Tests\ReactiveData.Tests.csproj", "{2F566277-76C7-4CCC-8ACB-FC1E2D9DD4F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveData.Samples", "samples\ReactiveData.Samples\ReactiveData.Samples.csproj", "{8D9BDFB2-6731-4B7F-A243-0263864D91A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveData.Samples", "samples\ReactiveData.Samples\ReactiveData.Samples.csproj", "{8D9BDFB2-6731-4B7F-A243-0263864D91A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
