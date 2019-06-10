@@ -8,7 +8,7 @@ namespace ReactiveData
     /// same object to notify of the change.
     /// </summary>
     /// <typeparam name="TValue">type of the value to wrap</typeparam>
-    public sealed class ReactiveVar<TValue> : ReactiveMutable<TValue>
+    public sealed class ReactiveVar<TValue> : Reactive<TValue>
     {
         private TValue _value;
 

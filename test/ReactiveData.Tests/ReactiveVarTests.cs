@@ -14,7 +14,7 @@ namespace ReactiveData.Tests
             reactiveVar.Set(2);
             changedCalled.AssertNotCalled();
 
-            Transaction.Complete();
+            Transaction.End();
             changedCalled.AssertCalled();
 
             Assert.AreEqual(2, reactiveVar.Value);
@@ -30,7 +30,7 @@ namespace ReactiveData.Tests
             reactiveVar.NotifyChanged();
             changedCalled.AssertNotCalled();
 
-            Transaction.Complete();
+            Transaction.End();
             changedCalled.AssertCalled();
 
             Assert.AreEqual(1, reactiveVar.Value);

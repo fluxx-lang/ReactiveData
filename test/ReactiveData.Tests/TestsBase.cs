@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using NUnit.Framework;
 
 namespace ReactiveData.Tests
@@ -35,7 +36,39 @@ namespace ReactiveData.Tests
             }
         }
 
-        protected ChangedCalled EnsureChangedCalled<T>(IReactive<T> reactive)
+        protected class PropertyChangedCalled
+        {
+            private object? _sender;
+            private PropertyChangedEventArgs? _args;
+
+            public void Set(object sender, PropertyChangedEventArgs args)
+            {
+                if (_sender != null || _args != null)
+                    throw new AssertionException("PropertyChanged called multiple times, when not expected");
+
+                _sender = sender;
+                _args = args;
+            }
+
+            public void AssertNotCalled()
+            {
+                Assert.IsTrue(_sender == null && _args == null, "PropertyChanged called when not expected");
+            }
+
+            public void AssertCalledWith(object expectedSender, string expectedPropertyName)
+            {
+                Assert.AreEqual(expectedSender, _sender);
+                Assert.AreEqual(expectedPropertyName, _args.PropertyName);
+            }
+
+            public void Reset()
+            {
+                _sender = null;
+                _args = null;
+            }
+        }
+
+        protected ChangedCalled EnsureChangedCalled(IReactive reactive)
         {
             var changedCalled = new ChangedCalled();
 
@@ -44,10 +77,19 @@ namespace ReactiveData.Tests
             return changedCalled;
         }
 
+        protected PropertyChangedCalled EnsurePropertyChangedCalled(INotifyPropertyChanged inpcObject)
+        {
+            var propertyChangedCalled = new PropertyChangedCalled();
+
+            inpcObject.PropertyChanged += (sender, args) => propertyChangedCalled.Set(sender, args);
+
+            return propertyChangedCalled;
+        }
+
         protected static void CompleteTransactionAndAssertChangedCalled(ChangedCalled changedCalled)
         {
             changedCalled.AssertNotCalled();
-            Transaction.Complete();
+            Transaction.End();
             changedCalled.AssertCalled();
         }
 

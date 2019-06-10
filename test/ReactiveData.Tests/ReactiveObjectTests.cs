@@ -8,34 +8,33 @@ namespace ReactiveData.Tests
         [Test]
         public void TestEnsureInTransaction()
         {
-            TestObject testObject = new TestObject();
-            var reactiveTestObject = new ReactiveObject<TestObject>(testObject);
+            var testObject = new TestObject();
 
             // Ensure that we only allow changes inside a transaction
-            Assert.That(() => testObject.SetSomething(), Throws.Exception.TypeOf<InvalidOperationException>());
+            Assert.That(() => testObject.IntValue = 42, Throws.Exception.TypeOf<InvalidOperationException>());
         }
 
         [Test]
         public void TestNotifyChanged()
         {
-            TestObject testObject = new TestObject();
-            var reactiveTestObject = new ReactiveObject<TestObject>(testObject);
-            ChangedCalled changedCalled = EnsureChangedCalled(reactiveTestObject);
+            var testObject = new TestObject();
+            ChangedCalled changedCalled = EnsureChangedCalled(testObject);
 
             Transaction.Start();
-            testObject.SetSomething();
-            testObject.SetSomething();
-            testObject.SetSomething();
+            testObject.IntValue = 1;
+            testObject.IntValue = 2;
+            testObject.IntValue = 3;
             CompleteTransactionAndAssertChangedCalled(changedCalled);
         }
 
-        private class TestObject : INotifyObjectChanged
+        private class TestObject : ReactiveObject
         {
-            public event ObjectChangedEventHandler ObjectChanged;
+            private int _intValue;
 
-            public void SetSomething()
+            public int IntValue
             {
-                ObjectChanged?.Invoke();
+                get => Get(_intValue);
+                set => Set(out _intValue, value);
             }
         }
     }

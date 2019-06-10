@@ -1,32 +1,21 @@
-using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
-namespace ReactiveData
-{
-    public sealed class ReactiveObject<TValue> : ReactiveMutable<TValue>, IDisposable where TValue : INotifyObjectChanged
+namespace ReactiveData {
+    public abstract class ReactiveObject : ReactiveBase
     {
-        private readonly TValue _value;
-
-        public ReactiveObject(TValue value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected T Get<T>(T storage)
         {
-            _value = value;
-            _value.ObjectChanged += OnObjectChanged;
+            RunningDerivationsStack.Top?.AddDependency(this);
+            return storage;
         }
 
-        public void Dispose()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void Set<T>(out T storage, T value)
         {
-            _value.ObjectChanged -= OnObjectChanged;
-        }
-
-        private void OnObjectChanged()
-        {
+            storage = value;
             NotifyChanged();
-        }
-
-        public override TValue Value {
-            get {
-                RunningDerivationsStack.Top?.AddDependency(this);
-                return _value;
-            }
         }
     }
 }

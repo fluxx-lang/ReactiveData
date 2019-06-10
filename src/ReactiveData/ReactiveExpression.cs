@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace ReactiveData
 {
@@ -7,7 +8,7 @@ namespace ReactiveData
         void OnDependencyChanged();
     }
 
-    public class ReactiveExpression<TValue> : ReactiveMutable<TValue>, IReactiveExpression
+    public class ReactiveExpression<TValue> : Reactive<TValue>, IReactiveExpression
     {
         private readonly Func<TValue> _expressionFunction;
         private TValue _value;

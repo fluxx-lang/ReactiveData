@@ -17,7 +17,14 @@ namespace ReactiveData
             _reactionsToNotify!.Add(changedEventHandler);
         }
 
-        public static void Complete()
+        /// <summary>
+        /// Finish a transaction, committing it and sending Changed notifications for everything that may have changed.
+        ///
+        /// Note that ReactiveData doesn't provide support for aborting transactions & undoing changes already made.
+        /// If the client wants that functionality, they can implement it themselves, setting data back to its original
+        /// value before calling End.
+        /// </summary>
+        public static void End()
         {
             foreach (ChangedEventHandler changedEventHandler in _reactionsToNotify!)
                 changedEventHandler.Invoke();
@@ -28,7 +35,7 @@ namespace ReactiveData
         {
             Start();
             action.Invoke();
-            Complete();
+            End();
         }
 
         public static void EnsureInTransaction()

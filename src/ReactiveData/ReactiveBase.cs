@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace ReactiveData {
-    public abstract class ReactiveMutable<TValue> : IReactive<TValue>
+    public abstract class ReactiveBase : IReactive
     {
         private List<IReactiveExpression>? _expressionsDependingOnMe;
 
@@ -37,7 +37,5 @@ namespace ReactiveData {
         {
             _expressionsDependingOnMe?.Remove(reactiveExpression);
         }
-
-        public abstract TValue Value { get; }
     }
 }

@@ -1,32 +1,26 @@
-using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace ReactiveData
-{
-    public sealed class ReactiveINPCObject<TValue> : ReactiveMutable<TValue>, IDisposable where TValue : INotifyPropertyChanged
+namespace ReactiveData {
+    public abstract class ReactiveInpcObject : ReactiveBase, INotifyPropertyChanged
     {
-        private readonly TValue _value;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public ReactiveINPCObject(TValue value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected T Get<T>(T storage)
         {
-            _value = value;
-            _value.PropertyChanged += OnPropertyChanged;
+            RunningDerivationsStack.Top?.AddDependency(this);
+            return storage;
         }
 
-        public void Dispose()
+        protected void Set<T>(ref T storage, T value, [CallerMemberName] string? propertyName = null)
         {
-            _value.PropertyChanged -= OnPropertyChanged;
-        }
+            if (!Equals(storage, value)) {
+                storage = value;
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            NotifyChanged();
-        }
-
-        public override TValue Value {
-            get {
-                RunningDerivationsStack.Top?.AddDependency(this);
-                return _value;
+                // Notify via both the ReactiveData and INotifyPropertyChanged mechanisms
+                NotifyChanged();  
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }
