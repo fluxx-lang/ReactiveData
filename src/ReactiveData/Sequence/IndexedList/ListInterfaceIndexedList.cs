@@ -25,7 +25,6 @@ namespace ReactiveData.Sequence.IndexedList
             if (removeCount == listCount) {
                 _list.Clear();
                 removeCount = 0;
-                listCount = 0;
             }
 
             // Update in place where we can
