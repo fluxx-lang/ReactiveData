@@ -143,7 +143,7 @@ namespace ReactiveData.Samples
             var user = new UserSupportingOnlyInpc();
 
             Reactive<UserSupportingOnlyInpc> reactiveUser = ReactiveInpc(user);
-            Reactive<string> fullName = new ReactiveExpression<string>(() => $"{reactiveUser.Value.FirstName} {reactiveUser.Value.LastName}");
+            Reactive<string> fullName = ReactiveExpression(() => $"{reactiveUser.Value.FirstName} {reactiveUser.Value.LastName}");
 
             OutputWhenChanged(fullName);
 
