@@ -13,7 +13,7 @@ With it you can create say UI that automatically updates when model or view mode
 ReactiveData brings a few advantages over the simple INotifyPropertyChanged:
 
 - Dependencies are tracked automatically, fine grained, and updated dynamically as they change. That makes it easy to use and efficient.
-- Updates, even to a complex graph where several pieces of data change, are guaranteed to be _glitch_ free, never capturing data in an intermediate state.
+- Updates, even to a complex graph where several pieces of data change, are guaranteed to be _glitch free_, never capturing data in an intermediate state.
 
 The magic of automatic dependencies and glitch free updates happen via a similar algorithm to MobX, described in detail [here](https://hackernoon.com/becoming-fully-reactive-an-in-depth-explanation-of-mobservable-55995262a254).
 
@@ -36,6 +36,8 @@ Normally the XAML binding is restricted to single properties, but ReactiveData a
 ## Usage
 
 ### Getting started
+
+For a complete running version of the code snippets below, see https://github.com/reactive-data/ReactiveData/blob/master/samples/ReactiveData.Samples/GettingStartedDemonstration.cs.
 
 ```csharp
 // A ReactiveVar is a simple mutable object with a Set method to update it in its entirety. It can turn
