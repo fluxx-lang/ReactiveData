@@ -76,7 +76,9 @@ namespace ReactiveData.Samples
             Reactive<string> fullName = ReactiveExpression(() => $"{user.FirstName} {user.LastName}");
 
             // Print a message when the fullName changes
-            OutputWhenChanged(fullName);
+            fullName.Changed += () => {
+                Console.WriteLine($"Value is now: {fullName.Value}");
+            };
 
             Transaction.Start();
             user.FirstName = "John";
