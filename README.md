@@ -33,6 +33,27 @@ The key thing here is that the `Settings.UseAlias ? User.Alias : $"{User.FirstNa
 is reactive. If any component of that expression changes, it's automatically re-evaluated and the label text updated.
 Normally the XAML binding is restricted to single properties, but ReactiveData allows arbitrary expressions to be "bound".
 
+## How does ReactiveData compare to reactive streams libraries, like [ReactiveX](http://reactivex.io/) and [ReactiveUI](https://reactiveui.net/)?
+
+They solve different problems and can complement each other. This article describes the differences well: [MobX vs Reactive Stream Libraries](https://github.com/mobxjs/mobx/wiki/Mobx-vs-Reactive-Stream-Libraries-(RxJS,-Bacon,-etc)).
+
+In short the stream libraries handle streams of events over time while ReactiveData handles state that changes. If you want to throttle keyboard events, a stream library
+is a good choice. If you want Excel-like functionality where updating a cell automatically updates everything in the spreadsheet that depends on it, ReactiveData works well.
+
+For most use cases, especially building UI, you should find ReactiveData much easier to use, with a much simpler API.
+Instead of needing to string together predefined stream operators, you just write normal C# expressions and functions.
+
+Here are some comparisons from other ecosystems:
+
+- Consider Apple's recent announcements. Apple introduced [SwiftUI](https://developer.apple.com/tutorials/swiftui), which has reactivity (in the ReactiveData sense) built in by default.
+When state changes the views automatically update, even when that state is part of arbitrary expressions or conditionals.
+They also introduced [Combine](https://developer.apple.com/documentation/combine), which is a reactive streams implementation, useful in other scenarios.
+But SwiftUI reactivity is intended to be the bread & butter of authoring UI, and ReactiveData brings that functionality to the .NET world.
+
+- Google introduced a similar model in [Jetpack Compose](https://developer.android.com/jetpack/compose), where reactivity is built into Kotlin for creating UI.
+
+- In the JavaScript world, [React](https://reactjs.org/), especially when combined with [MobX](https://github.com/mobxjs/mobx), uses the ReactiveData-style model to create reactive UIs. But [RxJS](https://rxjs-dev.firebaseapp.com/) or other reactive streams libraries can be used to complement that. 
+
 ## Usage
 
 ### Getting started
