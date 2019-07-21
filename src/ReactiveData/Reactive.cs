@@ -5,7 +5,7 @@ namespace ReactiveData {
     /// recomputed on change, etc.
     /// </summary>
     /// <typeparam name="TValue">data type of value</typeparam>
-    public abstract class Reactive<TValue> : ReactiveBase
+    public abstract class Reactive<TValue> : ReactiveBase, IReactive<TValue>
     {
         public abstract TValue Value { get; }
     }
