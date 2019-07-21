@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 
 namespace ReactiveData.Sequence.IndexedList
 {
-    public class ListInterfaceIndexedList<T> : IIndexedList<T>
+    public class NonGenericIListOnSequence<T> : IIndexedList<T>
     {
-        private readonly IList<T> _list;
+        private readonly IList _list;
 
-        public ListInterfaceIndexedList(IList<T> list)
+        public NonGenericIListOnSequence(IList list)
         {
             _list = list;
         }
