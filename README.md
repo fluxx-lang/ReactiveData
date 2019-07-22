@@ -30,7 +30,9 @@ Here's an example, with a coded UI for Xamarin.Forms (using some Xamarin.Forms s
 ```
 
 The key thing here is that the `Settings.UseAlias ? User.Alias : $"{User.FirstName} {User.LastName}"`, which is set as the Label text,
-is reactive. If any component of that expression changes, it's automatically re-evaluated and the label text updated.
+is reactive. If that expression changes, it's automatically re-evaluated and the label text updated. The dependencies here are computed
+dynamically, so if `Settings.UseAlias` is true, the expression is only reevaluated if `Settings.UseAlias` or `User.Alias` change, not
+if `User.FirstName` or `User.LastName` change.
 Normally the XAML binding is restricted to single properties, but ReactiveData allows arbitrary expressions to be "bound".
 
 ## How does ReactiveData compare to reactive streams libraries, like [ReactiveX](http://reactivex.io/) and [ReactiveUI](https://reactiveui.net/)?
