@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using ReactiveData.Sequence.IndexedList;
 
@@ -17,9 +18,15 @@ namespace ReactiveData.Sequence
         /// <typeparam name="T">element type</typeparam>
         /// <param name="list">list implementing IList</param>
         /// <param name="sequence">sequence, which can be nonreactive or reactive</param>
-        public static void ListOnSequence<T>(IList<T> list, ISequence<T> sequence)
+        public static void IListOnSequence<T>(IList<T> list, ISequence<T> sequence)
         {
-            IIndexedList<T> listInterfaceIndexedList = new ListInterfaceIndexedList<T>(list);
+            IIndexedList<T> listInterfaceIndexedList = new IListOnSequence<T>(list);
+            new IndexedListOnSequence<T>(listInterfaceIndexedList, sequence);
+        }
+
+        public static void NonGenericIListOnSequence<T>(IList list, ISequence<T> sequence)
+        {
+            IIndexedList<T> listInterfaceIndexedList = new NonGenericIListOnSequence<T>(list);
             new IndexedListOnSequence<T>(listInterfaceIndexedList, sequence);
         }
 
