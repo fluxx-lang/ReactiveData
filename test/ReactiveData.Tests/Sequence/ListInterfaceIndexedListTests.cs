@@ -10,7 +10,7 @@ namespace ReactiveData.Tests.Sequence
         public void TestInsert()
         {
             List<int> list = CreateTestList();
-            var listInterfaceIndexedList = new ListInterfaceIndexedList<int>(list);
+            var listInterfaceIndexedList = new IListOnSequence<int>(list);
 
             listInterfaceIndexedList.Update(5, 0, new[] { 100, 101, 102 });
             AssertListRangeIs(list, start: 0, end: 5, firstValue: 0);
@@ -23,7 +23,7 @@ namespace ReactiveData.Tests.Sequence
         public void TestReplace()
         {
             List<int> list = CreateTestList();
-            var listInterfaceIndexedList = new ListInterfaceIndexedList<int>(list);
+            var listInterfaceIndexedList = new IListOnSequence<int>(list);
 
             listInterfaceIndexedList.Update(3, 5, new[] { 100, 101, 102, 103, 104 });
             AssertListRangeIs(list, start: 0, end: 3, firstValue: 0);
@@ -36,7 +36,7 @@ namespace ReactiveData.Tests.Sequence
         public void TestReplaceAllWithLess()
         {
             List<int> list = CreateTestList();
-            var listInterfaceIndexedList = new ListInterfaceIndexedList<int>(list);
+            var listInterfaceIndexedList = new IListOnSequence<int>(list);
 
             listInterfaceIndexedList.Update(0, 10, new[] { 100, 101, 102, 103, 104 });
             AssertListRangeIs(list, start: 0, end: 5, firstValue: 100);
@@ -47,7 +47,7 @@ namespace ReactiveData.Tests.Sequence
         public void TestReplaceAllWithEqual()
         {
             List<int> list = CreateTestList();
-            var listInterfaceIndexedList = new ListInterfaceIndexedList<int>(list);
+            var listInterfaceIndexedList = new IListOnSequence<int>(list);
 
             listInterfaceIndexedList.Update(0, 10, new[] { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109 });
             AssertListRangeIs(list, start: 0, end: 10, firstValue: 100);
@@ -58,7 +58,7 @@ namespace ReactiveData.Tests.Sequence
         public void TestReplaceAllWithMore()
         {
             List<int> list = CreateTestList();
-            var listInterfaceIndexedList = new ListInterfaceIndexedList<int>(list);
+            var listInterfaceIndexedList = new IListOnSequence<int>(list);
 
             listInterfaceIndexedList.Update(0, 10, new[] { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111 });
             AssertListRangeIs(list, start: 0, end: 12, firstValue: 100);
@@ -69,7 +69,7 @@ namespace ReactiveData.Tests.Sequence
         public void TestReplaceAndRemove()
         {
             List<int> list = CreateTestList();
-            var listInterfaceIndexedList = new ListInterfaceIndexedList<int>(list);
+            var listInterfaceIndexedList = new IListOnSequence<int>(list);
 
             listInterfaceIndexedList.Update(3, 7, new[] { 100, 101, 102, 103, 104 });
             AssertListRangeIs(list, start: 0, end: 3, firstValue: 0);
@@ -81,7 +81,7 @@ namespace ReactiveData.Tests.Sequence
         public void TestReplaceAndInsert()
         {
             List<int> list = CreateTestList();
-            var listInterfaceIndexedList = new ListInterfaceIndexedList<int>(list);
+            var listInterfaceIndexedList = new IListOnSequence<int>(list);
 
             listInterfaceIndexedList.Update(3, 2, new[] { 100, 101, 102, 103, 104 });
             AssertListRangeIs(list, start: 0, end: 3, firstValue: 0);
@@ -94,7 +94,7 @@ namespace ReactiveData.Tests.Sequence
         public void TestReplaceAndAppend()
         {
             List<int> list = CreateTestList();
-            var listInterfaceIndexedList = new ListInterfaceIndexedList<int>(list);
+            var listInterfaceIndexedList = new IListOnSequence<int>(list);
 
             listInterfaceIndexedList.Update(8, 2, new[] { 100, 101, 102, 103, 104 });
             AssertListRangeIs(list, start: 0, end: 8, firstValue: 0);
