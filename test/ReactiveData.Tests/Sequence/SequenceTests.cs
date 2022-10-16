@@ -40,7 +40,7 @@ namespace ReactiveData.Tests.Sequence
             );
 
             var list = new List<int>();
-            new IndexedListOnSequence<int>(new ListInterfaceIndexedList<int>(list), rootSequence);
+            new IndexedListOnSequence<int>(new IListOnSequence<int>(list), rootSequence);
 
             Assert.AreEqual(10, list.Count);
             AssertListRangeIs(list, start: 0, end: 10, firstValue: 0);
@@ -60,7 +60,7 @@ namespace ReactiveData.Tests.Sequence
             );
 
             var list = new List<int>();
-            new IndexedListOnSequence<int>(new ListInterfaceIndexedList<int>(list), rootSequence);
+            new IndexedListOnSequence<int>(new IListOnSequence<int>(list), rootSequence);
 
             AssertListRangeIs(list, start: 0, end: 3, firstValue: 0);
             AssertListRangeIs(list, start: 3, end: 5, firstValue: 100);
